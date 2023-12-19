@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### CSV et Archive ###
+src/main/resources/*.gz
+src/main/resources/*.zip
+src/main/resources/*.csv
