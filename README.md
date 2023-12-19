@@ -4,7 +4,7 @@
 
 ## Diagramme de séquences
 
-![StarUML: Diagramme séquences](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/blob/conception_uml/diagramme_sequences.jpg)
+![StarUML diagramme de séquences](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/blob/conception_uml/diagramme_sequences.jpg)
 
 ## Files
 [Fichier StarUML contenant toute l'étude *(Use Case)*](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/blob/conception_uml/UML.mdj)
