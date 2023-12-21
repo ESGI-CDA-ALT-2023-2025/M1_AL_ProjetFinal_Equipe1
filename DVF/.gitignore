@@ -36,3 +36,4 @@ build/
 src/main/resources/*.gz
 src/main/resources/*.zip
 src/main/resources/*.csv
+static/*
