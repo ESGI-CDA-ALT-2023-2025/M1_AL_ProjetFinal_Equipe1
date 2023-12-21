@@ -4,6 +4,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("")
@@ -19,5 +23,4 @@ public class DonneeFonciereRestController {
     ) {
         return "longitude: " + longitude + ", latitude: " + latitude + ", rayon: " + rayon + " m";
     }
-
 }
