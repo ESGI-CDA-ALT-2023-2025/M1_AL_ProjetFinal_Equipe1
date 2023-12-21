@@ -21,8 +21,7 @@ public class DataFonciersDownloadService {
 
     private static final StringBuilder SB = new StringBuilder();
 
-    private static final Logger LOGGER =
-            LogManager.getLogger(DataFonciersDownloadService.class);
+    private static final Logger LOGGER = LogManager.getLogger(DataFonciersDownloadService.class);
 
     public void downloadAndSaveFile() {
 

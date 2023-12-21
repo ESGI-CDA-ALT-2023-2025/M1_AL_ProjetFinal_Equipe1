@@ -1,11 +1,17 @@
 package fr.esgi.dvf.business;
 
-import jakarta.persistence.*;
-import lombok.Cleanup;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Getter;
 
 @Entity
 @Table(name = "DonneeFonciere")
+@Getter
+@Builder(toBuilder = true)
 public class DonneeFonciere {
 
     @Id
