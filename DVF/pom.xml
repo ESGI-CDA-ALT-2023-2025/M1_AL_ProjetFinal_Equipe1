@@ -62,14 +62,30 @@
 		</dependency>
 
 		<!-- ============================== -->
+		<!-- =========== Swagger ========== -->
+		<!-- ============================== -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.3.0</version>
+		</dependency>
+
+		<!--
+		<dependency>
+        	<groupId>org.springdoc</groupId>
+        	<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        	<version>2.3.0</version>
+    	</dependency>
+		-->
+
+		<!-- ============================== -->
 		<!-- 	Pour traitement de fichier	-->
 		<!-- ============================== -->	
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.11.0</version>
-		</dependency>		
-		
+		</dependency>
 	</dependencies>
 
 	<build>
