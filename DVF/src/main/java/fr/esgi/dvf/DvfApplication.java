@@ -12,43 +12,37 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import fr.esgi.dvf.init.DataFonciersDownloadService;
 import jakarta.annotation.PostConstruct;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.List;
 
 @SpringBootApplication
-public class DvfApplication {
+@EnableScheduling
+public class DvfApplication{
 
     private static final Logger LOGGER = LogManager.getLogger(DvfApplication.class);
 
     @Autowired
     private DataFonciersDownloadService dataFonciersDownloadService;
-public class DvfApplication implements CommandLineRunner {
-
     @Autowired
     private CsvReaderService csvReaderService;
-
-    @Autowired
-    private DonneeFonciereRepository repository;
 
     public static void main(String[] args) {
         SpringApplication.run(DvfApplication.class, args);
     }
 
-    @Override
-    public void run(String... args) throws Exception {
-        String filePath = "src/main/resources/69.csv";
-        int numberOfLinesToRead = 100000;
-        List<DonneeFonciere> donneesFoncieres = csvReaderService.readCsv(filePath, numberOfLinesToRead);
-
-        repository.saveAll(donneesFoncieres);
-    }
-
-
     @PostConstruct
-    public void init() {
+    public void init() throws Exception {
         dataFonciersDownloadService.downloadAndSaveFile();
 
         dataFonciersDownloadService.unzip();
+    }
+
+    @Scheduled(fixedRate = 300000)
+    public void scheduleSaveToDatabase() throws Exception{
+        LOGGER.info("Tâche automatique : sauvegarde en base des 100 000 lignes suivantes");
+        csvReaderService.saveToDatabase();
     }
 
 }
