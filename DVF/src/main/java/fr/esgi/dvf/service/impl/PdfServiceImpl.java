@@ -31,7 +31,7 @@ public class PdfServiceImpl implements
     @Override
     public void writeDataToPDF(List<DonneeFonciere> donnees) {
         for (DonneeFonciere donnee : donnees) {
-            this.document.add(new Paragraph("Ligne de texte : " + donnee.getAdresseNomVoie()));
+            this.addDonneeFonciereToDocument(donnee);
         }
     }
 
@@ -62,6 +62,22 @@ public class PdfServiceImpl implements
         Resource resource = new UrlResource(path.toUri());
 
         return resource;
+    }
+    
+    private void addDonneeFonciereToDocument(DonneeFonciere donnee) {
+        this.document.add(new Paragraph("ID: " + donnee.getId()));
+        this.document.add(new Paragraph("Valeur Foncière: " + donnee.getValeurFonciere()));
+        this.document.add(new Paragraph("Adresse Numéro: " + donnee.getAdresseNumero()));
+        this.document.add(new Paragraph("Adresse Nom Voie: " + donnee.getAdresseNomVoie()));
+        this.document.add(new Paragraph("Code Postal: " + donnee.getCodePostal()));
+        this.document.add(new Paragraph("Nom Commune: " + donnee.getNomCommune()));
+        this.document.add(new Paragraph("Code Département: " + donnee.getCodeDepartement()));
+        this.document.add(new Paragraph("Nature Mutation: " + donnee.getNatureMutation()));
+        this.document.add(new Paragraph("Type Local: " + donnee.getTypeLocal()));
+        this.document.add(new Paragraph("Surface Terrain: " + donnee.getSurfaceTerrain()));
+        this.document.add(new Paragraph("Longitude: " + donnee.getLongitude()));
+        this.document.add(new Paragraph("Latitude: " + donnee.getLatitude()));
+        this.document.add(new Paragraph("\n"));
     }
 
 }
