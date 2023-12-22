@@ -1,12 +1,15 @@
 package fr.esgi.dvf.service.impl;
 
 import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
@@ -35,8 +38,8 @@ public class PdfServiceImpl implements
     @Override
     public Document pdfDocumentProvider() {
         this.fileName = "pdf_" + UUID.randomUUID();
-        
-        PdfWriter writer = null;        
+
+        PdfWriter writer = null;
         try {
             writer = new PdfWriter(PDF_DIR + fileName + ".pdf");
         } catch (FileNotFoundException e) {
@@ -52,10 +55,13 @@ public class PdfServiceImpl implements
     }
 
     @Override
-    public Resource resourceProducer() {
+    public Resource resourceProducer() throws MalformedURLException {
         this.document.close();
 
-        return new ClassPathResource(PDF_DIR + this.fileName);
+        Path path = Paths.get(PDF_DIR + fileName + ".pdf");
+        Resource resource = new UrlResource(path.toUri());
+
+        return resource;
     }
 
 }

@@ -1,5 +1,6 @@
 package fr.esgi.dvf.service;
 
+import java.net.MalformedURLException;
 import java.util.List;
 import org.springframework.core.io.Resource;
 import com.itextpdf.layout.Document;
@@ -28,5 +29,5 @@ public interface IPdfService {
      * 
      * @return
      */
-    public Resource resourceProducer();
+    public Resource resourceProducer() throws MalformedURLException;
 }
