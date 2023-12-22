@@ -1,0 +1,11 @@
+<Files "*.pdf">
+    Order Deny,Allow
+    Deny from all
+
+    # Проверка, что запрос приходит из вашего приложения
+    SetEnvIf Referer "http://localhost:8080/" allow_access
+    Order Deny,Allow
+    Allow from env=allow_access
+
+    # A la place "http://localhost:8080/" inserer nom de domaine de l'application
+</Files>
