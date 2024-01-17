@@ -14,6 +14,14 @@
 
 ![StarUML diagramme de séquences](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/blob/conception_uml/diagramme_activite_recuperer_100k_lignes_suivantes.jpg)
 
+## Diagramme de classes
+
+## ![StarUML diagramme de classes](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/blob/conception_uml/XXX.jpg)
+
+## Diagramme d'état-transition
+
+## ![StarUML diagramme de classes](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/blob/conception_uml/XXX.jpg)
+
 ## Files
 [Fichier StarUML contenant toute l'étude *(Use Case)*](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/blob/conception_uml/UML.mdj)
 
