@@ -30,7 +30,7 @@ public class DonneeFonciereRestController {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception e) {
-        log.atError().log("ERREUR {}",
+        log.atError().log("ERREUR {}", 
                           e.getLocalizedMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Une erreur s'est produite");
     }
