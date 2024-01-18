@@ -2,7 +2,7 @@
     Order Deny,Allow
     Deny from all
 
-    # Проверка, что запрос приходит из вашего приложения
+    # Verification si la requête vient de notre application
     SetEnvIf Referer "http://localhost:8080/" allow_access
     Order Deny,Allow
     Allow from env=allow_access
