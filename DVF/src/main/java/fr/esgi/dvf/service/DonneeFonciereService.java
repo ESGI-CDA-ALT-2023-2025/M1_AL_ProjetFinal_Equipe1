@@ -1,10 +1,12 @@
 package fr.esgi.dvf.service;
 
-import fr.esgi.dvf.business.DonneeFonciere;
-
 import java.util.List;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 
-public interface DonneeFonciereService {
+public interface DonneeFonciereService<T> {
 
-    public List<DonneeFonciere> getDonneesFonciereByRadius(final double latitude, final double longitude, final double radius);
+    public List<T> getDonneesFonciereByRadius(final double latitude, final double longitude, final double radius);
+
+    public ResponseEntity<Resource> getResponseWithResource(final double latitude, final double longitude, final double radius);
 }
