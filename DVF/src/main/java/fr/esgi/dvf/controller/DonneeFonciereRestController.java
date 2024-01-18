@@ -16,11 +16,13 @@ import fr.esgi.dvf.service.DonneeFonciereService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.extern.log4j.Log4j2;
 
 @RestController
 @RequestMapping("")
 @Validated
 @CrossOrigin
+@Log4j2
 public class DonneeFonciereRestController {
 
     @Autowired
@@ -28,6 +30,8 @@ public class DonneeFonciereRestController {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception e) {
+        log.atError().log("ERREUR {}",
+                          e.getLocalizedMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Une erreur s'est produite");
     }
 
