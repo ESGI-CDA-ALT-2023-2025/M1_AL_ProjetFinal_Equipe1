@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import fr.esgi.dvf.business.DonneeFonciere;
 import fr.esgi.dvf.service.DonneeFonciereService;
-import fr.esgi.dvf.service.IPdfService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -26,9 +25,6 @@ public class DonneeFonciereRestController {
 
     @Autowired
     private DonneeFonciereService<DonneeFonciere> donneeFonciereService;
-
-    @Autowired
-    private IPdfService pdfService;
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception e) {

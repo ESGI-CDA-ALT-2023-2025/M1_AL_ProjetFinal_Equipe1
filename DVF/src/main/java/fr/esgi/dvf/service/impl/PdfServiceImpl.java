@@ -23,7 +23,7 @@ public class PdfServiceImpl implements
                             IPdfService {
 
     private static final String PDF_DIR = "static/pdf/";
-    private static final Logger LOGGER = LogManager.getLogger(DonneeFonciereServiceImpl.class);
+    private static final Logger LOGGER = LogManager.getLogger(PdfServiceImpl.class);
 
     private Document document;
     private String fileName;
