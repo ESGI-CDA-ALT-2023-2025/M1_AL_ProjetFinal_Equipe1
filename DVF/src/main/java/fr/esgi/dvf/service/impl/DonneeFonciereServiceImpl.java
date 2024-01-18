@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -17,16 +18,15 @@ import fr.esgi.dvf.business.DonneeFonciere;
 import fr.esgi.dvf.repository.DonneeFonciereRepository;
 import fr.esgi.dvf.service.DonneeFonciereService;
 import fr.esgi.dvf.service.IPdfService;
-import lombok.AllArgsConstructor;
 
 @Service
-@AllArgsConstructor // @AllArgsConstructor va faire injection (@Autowired)
 public class DonneeFonciereServiceImpl implements
                                        DonneeFonciereService<DonneeFonciere> {
 
     private static final Logger LOGGER = LogManager.getLogger(DonneeFonciereServiceImpl.class);
     private static final String FILE_PREFIX_FOR_CONTENT_DISPOSITION = "attachment; filename=donneeFonciere_";
 
+    @Autowired
     private IPdfService pdfService;
 
     private DonneeFonciereRepository repository;
@@ -79,7 +79,6 @@ public class DonneeFonciereServiceImpl implements
         } catch (MalformedURLException e) {
             LOGGER.atError().log("Fichier {} n'est pas introuvable !",
                                  e.getLocalizedMessage());
-            System.err.println("OK");
             // Gérer le cas où le chemin n'existe pas
             return ResponseEntity.notFound().build();
         }
