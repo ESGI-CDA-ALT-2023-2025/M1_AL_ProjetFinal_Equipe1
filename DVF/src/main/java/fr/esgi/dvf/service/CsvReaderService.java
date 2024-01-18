@@ -1,19 +1,19 @@
 package fr.esgi.dvf.service;
 
-import com.opencsv.CSVReader;
-import com.opencsv.bean.ColumnPositionMappingStrategy;
-import com.opencsv.bean.CsvToBeanBuilder;
-import fr.esgi.dvf.DvfApplication;
-import fr.esgi.dvf.business.DonneeFonciere;
-import fr.esgi.dvf.repository.DonneeFonciereRepository;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.List;
+import com.opencsv.CSVReader;
+import com.opencsv.bean.ColumnPositionMappingStrategy;
+import com.opencsv.bean.CsvToBeanBuilder;
+import fr.esgi.dvf.business.DonneeFonciere;
+import fr.esgi.dvf.repository.DonneeFonciereRepository;
 
 @Service
 public class CsvReaderService {
@@ -25,31 +25,43 @@ public class CsvReaderService {
     private int linesToSkip = 0;
     private static final int LINES_TO_READ = 100000;
 
-    public List<DonneeFonciere> readCsv(String filePath) throws Exception{
+    public List<DonneeFonciere> readCsv(String filePath) {
 
-        final String[] columnsToInclude = {"valeur_fonciere", "adresse_numero", "adresse_nom_voie", "code_postal", "nom_commune", "code_departement", "nature_mutation"};
+        final String[] columnsToInclude = {"valeur_fonciere", "adresse_numero", "adresse_nom_voie", "code_postal",
+                        "nom_commune", "code_departement", "nature_mutation"};
 
-        CSVReader csvReader = new CSVReader(new FileReader(filePath));
+        List<DonneeFonciere> donneeFoncieres = null;
+        try (CSVReader csvReader = new CSVReader(new FileReader(filePath))) {
 
-        if(linesToSkip > 0){
-            csvReader.skip(linesToSkip);
+            if (linesToSkip > 0) {
+                csvReader.skip(linesToSkip);
+            }
+            csvReader.skip(1);
+
+
+            donneeFoncieres = new CsvToBeanBuilder<DonneeFonciere>(csvReader)
+                                                                             .withType(DonneeFonciere.class)
+                                                                             .withMappingStrategy(new ColumnPositionMappingStrategy<>() {
+                                                                                 {
+                                                                                     setType(DonneeFonciere.class);
+                                                                                     setColumnMapping(columnsToInclude);
+                                                                                 }
+                                                                             })
+                                                                             .build()
+                                                                             .parse();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        csvReader.skip(1);
 
-        List< DonneeFonciere> donneeFoncieres = new CsvToBeanBuilder<DonneeFonciere>(csvReader)
-                .withType(DonneeFonciere.class)
-                .withMappingStrategy(new ColumnPositionMappingStrategy<>(){
-                    {
-                        setType(DonneeFonciere.class);
-                        setColumnMapping(columnsToInclude);
-                    }
-                })
-                .build()
-                .parse();
+        if (donneeFoncieres != null) {
+            return new ArrayList<>(donneeFoncieres.subList(0,
+                                                           Math.min(LINES_TO_READ,
+                                                                    donneeFoncieres.size())));
+        } 
+        
+        return Collections.emptyList();
 
-        List<DonneeFonciere> limitedList = new ArrayList<>(donneeFoncieres.subList(0, Math.min(LINES_TO_READ, donneeFoncieres.size())));
-
-        return limitedList;
     }
 
     public void saveToDatabase() throws Exception {
