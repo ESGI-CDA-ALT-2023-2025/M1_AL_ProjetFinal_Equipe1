@@ -27,14 +27,14 @@ public class DvfApplication{
     }
 
     @PostConstruct
-    public void init() throws Exception {
+    public void init() {
         dataFonciersDownloadService.downloadAndSaveFile();
 
         dataFonciersDownloadService.unzip();
     }
 
     @Scheduled(fixedRate = 300000)
-    public void scheduleSaveToDatabase() throws Exception{
+    public void scheduleSaveToDatabase() {
         LOGGER.info("Tâche automatique : sauvegarde en base des 100 000 lignes suivantes");
         csvReaderService.saveToDatabase();
     }

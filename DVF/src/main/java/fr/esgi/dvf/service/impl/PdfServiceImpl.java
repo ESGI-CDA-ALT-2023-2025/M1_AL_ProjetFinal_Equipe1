@@ -59,9 +59,8 @@ public class PdfServiceImpl implements
         this.document.close();
 
         Path path = Paths.get(PDF_DIR + fileName + ".pdf");
-        Resource resource = new UrlResource(path.toUri());
 
-        return resource;
+        return new UrlResource(path.toUri());
     }
     
     private void addDonneeFonciereToDocument(DonneeFonciere donnee) {
