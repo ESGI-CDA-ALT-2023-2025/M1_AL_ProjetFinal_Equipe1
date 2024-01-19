@@ -64,7 +64,7 @@ public class CsvReaderService {
 
     }
 
-    public void saveToDatabase() throws Exception {
+    public void saveToDatabase() {
         String filePath = "src/main/resources/full.csv";
 
         List<DonneeFonciere> donneesFoncieres = readCsv(filePath);

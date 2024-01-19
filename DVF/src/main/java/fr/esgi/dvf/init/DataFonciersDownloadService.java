@@ -48,13 +48,13 @@ public class DataFonciersDownloadService {
         String outputFile = SB.append(FILE_DIR).append(FILE_NAME_CSV).toString();
         SB.setLength(0);
 
-        try {
-            // Flux d'entrée pour le fichier gzip
-            FileInputStream fis = new FileInputStream(inputFile);
-            GZIPInputStream gzis = new GZIPInputStream(fis);
-
-            // Flux de sortie pour le fichier décompressé
-            FileOutputStream fos = new FileOutputStream(outputFile);
+        // Utilisation try-catch avec resource => .close()
+        try (
+                // Flux d'entrée pour le fichier gzip
+                FileInputStream fis = new FileInputStream(inputFile);
+                GZIPInputStream gzis = new GZIPInputStream(fis);
+                // Flux de sortie pour le fichier décompressé
+                FileOutputStream fos = new FileOutputStream(outputFile)) {
 
             byte[] buffer = new byte[1024];
             int len;
@@ -64,16 +64,13 @@ public class DataFonciersDownloadService {
                 fos.write(buffer, 0, len);
             }
 
-            gzis.close();
-            fis.close();
-            fos.close();
-
             LOGGER.atInfo().log("Fichier décompressé avec succès {}",
                                 outputFile);
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            LOGGER.atError().log("Erreur durant la phase de décompression {}",
+                                 e.getLocalizedMessage());
         }
+
     }
 
 }
