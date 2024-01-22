@@ -26,7 +26,7 @@ export class FormulaireComponent {
   constructor(private _apiService: ApiService) {
   }
 
-  onSubmit() {
+  onSubmit(): void {
     console.log(
       "longitude: ", this.longitude,
       "\nlatitude: ", this.latitude,
@@ -34,36 +34,37 @@ export class FormulaireComponent {
     )
 
     this._apiService.getInfo(this.longitude, this.latitude, this.rayon).subscribe({
-      next: (result: Blob) => {
+      next: (result: Blob): void => {
         this.afficherPdf(result);
       },
-      error: (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse): void => {
         alert(error.message);
       }
     });
   }
 
-  afficherPdf(pdfBlobObject: Blob) {
+  afficherPdf(pdfBlobObject: Blob): void {
 
-    let newBlob = new Blob([pdfBlobObject], { type: "application/pdf" });
+    let newBlob: Blob = new Blob([pdfBlobObject], { type: "application/pdf" });
 
-    const data = window.URL.createObjectURL(newBlob);
+    const data: string = window.URL.createObjectURL(newBlob);
 
     let link = document.createElement('a');
     link.href = data;
     link.download = this._genererTitreFichier();
     link.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}));
-
-    // setTimeout(function () {
-    //   window.URL.revokeObjectURL(data);
-    //   link.remove();
-    // }, 100);
   }
 
   private _genererTitreFichier(): string {
-    const currentDateTime: Date = new Date();
+    const now: Date = new Date();
 
-    return formatDate(currentDateTime, 'yyyy/MM/dd', 'fr');
+    const annee: number = now.getFullYear();
+    const mois: string = String(now.getMonth() + 1).padStart(2, '0'); // Les mois sont indexés de 0 à 11
+    const jour: string = String(now.getDate()).padStart(2, '0');
+    const heures: string = String(now.getHours()).padStart(2, '0');
+    const minutes: string = String(now.getMinutes()).padStart(2, '0');
+
+    return `DonneesFoncieres_${annee}-${mois}-${jour}_${heures}${minutes}`;
   }
 
 }
