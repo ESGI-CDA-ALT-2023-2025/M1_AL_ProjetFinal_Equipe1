@@ -3,7 +3,8 @@ import {MatInputModule} from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
 import {MatButtonModule} from "@angular/material/button";
 import {ApiService} from "../service/api.service";
-import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
+import {HttpErrorResponse} from "@angular/common/http";
+import {formatDate} from "@angular/common";
 
 @Component({
   selector: 'app-formulaire',
@@ -50,13 +51,19 @@ export class FormulaireComponent {
 
     let link = document.createElement('a');
     link.href = data;
-    link.download = 'pdfFileName'; // TODO: Essayer de récupérer le nom du fichier PDF renvoyé dans l'en-tête par l'API. (Content-Disposition)
+    link.download = this._genererTitreFichier();
     link.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}));
 
     // setTimeout(function () {
     //   window.URL.revokeObjectURL(data);
     //   link.remove();
     // }, 100);
+  }
+
+  private _genererTitreFichier(): string {
+    const currentDateTime: Date = new Date();
+
+    return formatDate(currentDateTime, 'yyyy/MM/dd', 'fr');
   }
 
 }
