@@ -18,9 +18,13 @@
 
 ![StarUML diagramme de classes](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/blob/conception_uml/diagramme_classes.jpg)
 
-## Diagramme d'état-transition
+## Diagramme d'état-transition de l'objet DonneeFonciere 
 
-## ![StarUML diagramme de classes](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/blob/conception_uml/XXX.jpg)
+![StarUML diagramme de classes](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/blob/conception_uml/diagramme_etat-transition_donneeFonciere.jpg)
+
+## Diagramme d'état-transition de l'objet Document
+
+![StarUML diagramme de classes](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/blob/conception_uml/diagramme_etat-transition_document.jpg)
 
 ## Files
 [Fichier StarUML contenant toute l'étude *(Use Case)*](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/blob/conception_uml/UML.mdj)
