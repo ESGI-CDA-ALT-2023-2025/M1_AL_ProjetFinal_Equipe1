@@ -16,7 +16,7 @@
 
 ## Diagramme de classes
 
-## ![StarUML diagramme de classes](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/blob/conception_uml/XXX.jpg)
+![StarUML diagramme de classes](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/blob/conception_uml/diagramme_classes.jpg)
 
 ## Diagramme d'état-transition
 
