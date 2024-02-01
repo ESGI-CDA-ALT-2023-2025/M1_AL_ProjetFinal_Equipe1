@@ -138,4 +138,12 @@
 		</plugins>
 	</build>
 
+	<profiles>
+		<profile>
+			<id>integration-tests</id>
+			<properties>
+				<skip.integration.tests>false</skip.integration.tests>
+			</properties>
+		</profile>
+	</profiles>
 </project>
