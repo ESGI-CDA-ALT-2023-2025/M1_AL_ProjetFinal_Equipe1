@@ -31,6 +31,7 @@ public class CsvReaderService {
                         "nom_commune", "code_departement", "nature_mutation"};
 
         List<DonneeFonciere> donneeFoncieres = null;
+
         try (CSVReader csvReader = new CSVReader(new FileReader(filePath))) {
 
             if (linesToSkip > 0) {
@@ -38,17 +39,15 @@ public class CsvReaderService {
             }
             csvReader.skip(1);
 
+            ColumnPositionMappingStrategy<DonneeFonciere> columnPositionMappingStrategy = new ColumnPositionMappingStrategy<>();
+            columnPositionMappingStrategy.setType(DonneeFonciere.class);
+            columnPositionMappingStrategy.setColumnMapping(columnsToInclude);
 
             donneeFoncieres = new CsvToBeanBuilder<DonneeFonciere>(csvReader)
-                                                                             .withType(DonneeFonciere.class)
-                                                                             .withMappingStrategy(new ColumnPositionMappingStrategy<>() {
-                                                                                 {
-                                                                                     setType(DonneeFonciere.class);
-                                                                                     setColumnMapping(columnsToInclude);
-                                                                                 }
-                                                                             })
-                                                                             .build()
-                                                                             .parse();
+             .withType(DonneeFonciere.class)
+             .withMappingStrategy(columnPositionMappingStrategy)
+             .build()
+             .parse();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -64,7 +63,7 @@ public class CsvReaderService {
 
     }
 
-    public void saveToDatabase() {
+    public void saveToDatabase(){
         String filePath = "src/main/resources/full.csv";
 
         List<DonneeFonciere> donneesFoncieres = readCsv(filePath);
