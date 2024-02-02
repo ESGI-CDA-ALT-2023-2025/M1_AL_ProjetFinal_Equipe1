@@ -11,6 +11,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
@@ -53,6 +54,7 @@ public class DonneeFonciereServiceImpl implements
     }
 
     @Override
+    @JmsListener(destination = "pdf-download-queue")
     public ResponseEntity<Resource> getResponseWithResource(final double latitude,
                                                             final double longitude,
                                                             final double radius) {

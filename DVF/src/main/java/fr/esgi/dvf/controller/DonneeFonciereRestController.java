@@ -1,5 +1,8 @@
 package fr.esgi.dvf.controller;
 
+import fr.esgi.dvf.business.PdfGenerationRequest;
+import fr.esgi.dvf.service.jms.PdfRequestCosumer;
+import fr.esgi.dvf.service.jms.PdfRequestProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -26,7 +29,10 @@ import lombok.extern.log4j.Log4j2;
 public class DonneeFonciereRestController {
 
     @Autowired
-    private DonneeFonciereService<DonneeFonciere> donneeFonciereService;
+    private PdfRequestProducer pdfRequestProducer;
+
+    @Autowired
+    private PdfRequestCosumer pdfRequestCosumer;
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception e) {
@@ -58,6 +64,12 @@ public class DonneeFonciereRestController {
                                         @RequestParam(name = "rayon",
                                                       defaultValue = "0")
                                         Double rayon) {
-        return this.donneeFonciereService.getResponseWithResource(latitude, longitude, rayon);
+        // Envoie de message vers la JMS pour la génération du PDF
+        pdfRequestProducer.sendPdfRequest(new PdfGenerationRequest(longitude,latitude,rayon));
+
+        // Attente de la génération du pdf
+        pdfRequestCosumer.getPdfGenerationFuture().join();
+
+        return pdfRequestCosumer.getResponse();
     }
 }
