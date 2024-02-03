@@ -119,6 +119,11 @@
 			<type>pom</type>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-activemq</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -138,4 +143,12 @@
 		</plugins>
 	</build>
 
+	<profiles>
+		<profile>
+			<id>integration-tests</id>
+			<properties>
+				<skip.integration.tests>false</skip.integration.tests>
+			</properties>
+		</profile>
+	</profiles>
 </project>
