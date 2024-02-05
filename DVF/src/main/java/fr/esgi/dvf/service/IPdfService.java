@@ -23,7 +23,7 @@ public interface IPdfService {
      * @param fileName
      * @return Document
      */
-    public DocumentWithFileName pdfDocumentProvider();
+    public DocumentWithFileName pdfDocumentProvider(String fileName);
 
     /**
      * Produire ressource de pdf pour response

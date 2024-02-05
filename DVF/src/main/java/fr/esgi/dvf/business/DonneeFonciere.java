@@ -18,8 +18,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Getter
 @Builder(toBuilder = true)
-public class DonneeFonciere implements
-                            Serializable {
+public class DonneeFonciere implements Serializable {
 
   private static final long serialVersionUID = -3151542965392735620L;
 

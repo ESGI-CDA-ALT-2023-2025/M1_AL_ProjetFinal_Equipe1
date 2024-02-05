@@ -4,15 +4,23 @@ import fr.esgi.dvf.business.DonneeFonciere;
 import fr.esgi.dvf.repository.DonneeFonciereRepository;
 import fr.esgi.dvf.service.DonneeFonciereService;
 import fr.esgi.dvf.service.IPdfService;
+import fr.esgi.dvf.service.PdfService;
 import fr.esgi.dvf.service.jms.PdfRequestCosumer;
 import fr.esgi.dvf.service.jms.PdfRequestProducer;
 import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +35,7 @@ public class DonneeFonciereServiceImpl implements
       "attachment; filename=donneeFonciere_";
 
   @Autowired
-  private IPdfService pdfService;
+  private PdfService pdfService;
 
   @Autowired
   private PdfRequestProducer pdfRequestProducer;
@@ -37,6 +45,8 @@ public class DonneeFonciereServiceImpl implements
 
   private DonneeFonciereRepository repository;
   private static final double EARTH_RADIUS = 6371000.0; // Earth radius in meters
+
+  private static final String PDF_DIR = "static/pdf/";
 
   public DonneeFonciereServiceImpl(DonneeFonciereRepository repository) {
     this.repository = repository;
@@ -81,18 +91,29 @@ public class DonneeFonciereServiceImpl implements
       return ResponseEntity.noContent().build();
     }
 
-    pdfRequestProducer.sendPdfRequest(donnees);
+    String fileName = "pdf_" + UUID.randomUUID();
 
-    pdfRequestCosumer.getPdfGenerationFuture().join();
+    pdfRequestProducer.sendPdfRequest(donnees, fileName);
+
+    // Création d'un nouveau latch a chaque fois
+    CountDownLatch latch = new CountDownLatch(1);
+
+    // On set le latch du consumer a nouveau (détruit après chaque countDown)
+    pdfRequestCosumer.setLatch(latch);
+
+    try{
+      latch.await();
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+    // Récupération du PDF
+    Path path = Paths.get(PDF_DIR + fileName + ".pdf");
 
     try {
-      String fileName = pdfRequestCosumer.getFileName();
-      resource = pdfService.resourceProducer(fileName);
+      resource = new UrlResource(path.toUri());
+      LOGGER.info("resource récupéré: " + resource);
     } catch (MalformedURLException e) {
-      LOGGER.atError().log("Fichier {} n'est pas introuvable !",
-                           e.getLocalizedMessage());
-      // Gérer le cas où le chemin n'existe pas
-      return ResponseEntity.notFound().build();
+      throw new RuntimeException(e);
     }
 
     if (!resource.exists()) {

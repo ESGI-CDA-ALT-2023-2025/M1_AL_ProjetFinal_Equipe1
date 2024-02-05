@@ -4,84 +4,72 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
-import fr.esgi.dvf.business.DocumentWithFileName;
 import fr.esgi.dvf.business.DonneeFonciere;
-import fr.esgi.dvf.service.IPdfService;
-import java.io.FileNotFoundException;
-import java.net.MalformedURLException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.UUID;
+import fr.esgi.dvf.service.PdfService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
 @Service
-public class PdfServiceImpl implements
-                            IPdfService {
+public class PdfServiceImpl implements PdfService {
 
-  private static final String PDF_DIR = "static/pdf/";
-  private static final Logger LOGGER = LogManager.getLogger(PdfServiceImpl.class);
+    private static final Logger LOGGER = LogManager.getLogger(PdfServiceImpl.class);
 
-  @Override
-  public void writeDataToPDF(Document document, List<DonneeFonciere> donnees) {
-    for (DonneeFonciere donnee : donnees) {
-      this.addDonneeFonciereToDocument(document, donnee);
+    private static final String PDF_DIR = "static/pdf/";
+
+    @Override
+    public void generateCompletePdf(String fileName, List<DonneeFonciere> donneeFoncieres) {
+
+        try{
+            // Création du writter
+            PdfWriter writer = new PdfWriter(new File(PDF_DIR + fileName + ".pdf"));
+
+            // Création objet PDF
+            PdfDocument pdf = new PdfDocument(writer);
+
+            // Création du objet document pour écrire
+            Document document = new Document(pdf);
+
+            // On ajoute les donnees
+            writeDonneesToDocument(document, donneeFoncieres);
+
+            document.close();
+
+            LOGGER.info("Le PDF à été crée : " + fileName);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
-  }
 
-  @Override
-  public DocumentWithFileName pdfDocumentProvider() {
 
-    Document document = null;
-
-    String fileName = "pdf_" + UUID.randomUUID();
-
-    PdfWriter writer = null;
-    try {
-      writer = new PdfWriter(PDF_DIR + fileName + ".pdf");
-    } catch (FileNotFoundException e) {
-      LOGGER.atError().log("Erreur pendant creation PdfWriter {}",
-                           e.getLocalizedMessage());
+    private void writeDonneesToDocument(Document document, List<DonneeFonciere> donneeFoncieres) {
+        for (Object obj : donneeFoncieres) {
+            if (obj instanceof DonneeFonciere) {
+                addDonneeFonciereToPdf(document, (DonneeFonciere) obj);
+            } else {
+                LOGGER.error("Invalid type found in donneeFoncieres list: " + obj.getClass());
+            }
+        }
     }
 
-    PdfDocument pdf = new PdfDocument(writer);
 
-    document = new Document(pdf);
-
-    return new DocumentWithFileName(document, fileName);
-  }
-
-  @Override
-  public Resource resourceProducer(String fileName) throws MalformedURLException {
-    Path path = Paths.get(PDF_DIR + fileName + ".pdf");
-
-    // Fermez le document après avoir créé la ressource
-
-    Resource res = new UrlResource(path.toUri());
-    LOGGER.atInfo().log("FICHIER dans pdfService {}",
-                        res.getFilename());
-
-    return res;
-  }
-
-  private void addDonneeFonciereToDocument(Document document, DonneeFonciere donnee) {
-    document.add(new Paragraph("ID: " + donnee.getId()));
-    document.add(new Paragraph("Valeur Foncière: " + donnee.getValeurFonciere()));
-    document.add(new Paragraph("Adresse Numéro: " + donnee.getAdresseNumero()));
-    document.add(new Paragraph("Adresse Nom Voie: " + donnee.getAdresseNomVoie()));
-    document.add(new Paragraph("Code Postal: " + donnee.getCodePostal()));
-    document.add(new Paragraph("Nom Commune: " + donnee.getNomCommune()));
-    document.add(new Paragraph("Code Département: " + donnee.getCodeDepartement()));
-    document.add(new Paragraph("Nature Mutation: " + donnee.getNatureMutation()));
-    document.add(new Paragraph("Type Local: " + donnee.getTypeLocal()));
-    document.add(new Paragraph("Surface Terrain: " + donnee.getSurfaceTerrain()));
-    document.add(new Paragraph("Longitude: " + donnee.getLongitude()));
-    document.add(new Paragraph("Latitude: " + donnee.getLatitude()));
-    document.add(new Paragraph("\n"));
-  }
-
+    private void addDonneeFonciereToPdf(Document doc, DonneeFonciere donneeFonciere){
+        doc.add(new Paragraph("ID: " + donneeFonciere.getId()));
+        doc.add(new Paragraph("Valeur Foncière: " + donneeFonciere.getValeurFonciere()));
+        doc.add(new Paragraph("Adresse Numéro: " + donneeFonciere.getAdresseNumero()));
+        doc.add(new Paragraph("Adresse Nom Voie: " + donneeFonciere.getAdresseNomVoie()));
+        doc.add(new Paragraph("Code Postal: " + donneeFonciere.getCodePostal()));
+        doc.add(new Paragraph("Nom Commune: " + donneeFonciere.getNomCommune()));
+        doc.add(new Paragraph("Code Département: " + donneeFonciere.getCodeDepartement()));
+        doc.add(new Paragraph("Nature Mutation: " + donneeFonciere.getNatureMutation()));
+        doc.add(new Paragraph("Type Local: " + donneeFonciere.getTypeLocal()));
+        doc.add(new Paragraph("Surface Terrain: " + donneeFonciere.getSurfaceTerrain()));
+        doc.add(new Paragraph("Longitude: " + donneeFonciere.getLongitude()));
+        doc.add(new Paragraph("Latitude: " + donneeFonciere.getLatitude()));
+        doc.add(new Paragraph("\n"));
+    }
 }

@@ -1,59 +1,54 @@
 package fr.esgi.dvf.service.jms;
 
-import com.itextpdf.layout.element.Paragraph;
-import fr.esgi.dvf.business.DocumentWithFileName;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.esgi.dvf.business.DonneeFonciere;
-import fr.esgi.dvf.service.IPdfService;
-import java.net.MalformedURLException;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import fr.esgi.dvf.service.PdfService;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.converter.MessageConversionException;
+import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+
 @Component
+@Getter
+@Setter
 public class PdfRequestCosumer {
 
-  private static final Logger LOGGER = LogManager.getLogger(PdfRequestCosumer.class);
-
-  private DocumentWithFileName doc;
-
-  private CompletableFuture<Void> pdfGenerationFuture = new CompletableFuture<>();
-
   @Autowired
-  private IPdfService pdfService;
+  private PdfService pdfService;
 
-  @JmsListener(destination = "pdf-download-queue",
-               concurrency = "1")
-  public void receivePdfRequest(List<DonneeFonciere> donnees) {
-    LOGGER.info("DONNEES = " + donnees.size());
+  private CountDownLatch latch = new CountDownLatch(1);
 
+  @JmsListener(destination = "pdf-download-queue")
+  public void receivePdfRequest(Message<byte[]> message, @Headers Map<String, Object> headers) {
+    byte[] payload = message.getPayload();
+
+    // Convertion de l'objet byte en Map
+    ObjectMapper objectMapper = new ObjectMapper();
     try {
-      doc = this.pdfService.pdfDocumentProvider();
+      Map<String, Object> pdfRequestMap = objectMapper.readValue(payload, new TypeReference<Map<String, Object>>() {});
 
-      this.pdfService.writeDataToPDF(doc.getDocument(), donnees);
-      doc.getDocument()
-         .add(new Paragraph("Pdf a été generé : " + LocalDateTime.now().toString()));
-    } finally {
-      if (doc != null) {
-        doc.getDocument().close();
-      }
+      // Map contenant le fileName et les données
+      List<DonneeFonciere> donnees = objectMapper.convertValue(pdfRequestMap.get("donnees"), new TypeReference<List<DonneeFonciere>>() {});
+      String fileName = (String) pdfRequestMap.get("fileName");
 
-      // Complétez le futur après que le traitement asynchrone est terminé
-      pdfGenerationFuture.complete(null);
+      // Génération du PDF
+      pdfService.generateCompletePdf(fileName, donnees);
+
+      System.out.println("Received PDF request for fileName: " + fileName);
+
+      latch.countDown();
+    } catch (IOException e) {
+      throw new MessageConversionException("Error processing PDF request", e);
     }
-  }
-
-  public String getFileName() throws MalformedURLException {
-    String fileName = doc.getFileName();
-    LOGGER.info("NOM de fichier dans Queue " + fileName);
-    return fileName;
-  }
-
-  public CompletableFuture<Void> getPdfGenerationFuture() {
-    return pdfGenerationFuture;
   }
 }
