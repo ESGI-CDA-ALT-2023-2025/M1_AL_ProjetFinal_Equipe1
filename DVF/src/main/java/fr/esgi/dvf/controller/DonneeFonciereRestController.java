@@ -1,13 +1,11 @@
 package fr.esgi.dvf.controller;
 
-import fr.esgi.dvf.business.PdfGenerationRequest;
-import fr.esgi.dvf.service.jms.PdfRequestCosumer;
-import fr.esgi.dvf.service.jms.PdfRequestProducer;
+import fr.esgi.dvf.business.DonneeFonciere;
+import fr.esgi.dvf.service.DonneeFonciereService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.extern.log4j.Log4j2;
-import java.util.concurrent.ExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -28,10 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class DonneeFonciereRestController {
 
   @Autowired
-  private PdfRequestProducer pdfRequestProducer;
-
-  @Autowired
-  private PdfRequestCosumer pdfRequestCosumer;
+  private DonneeFonciereService<DonneeFonciere> donneeFonciereService;
 
   @ExceptionHandler(Exception.class)
   public ResponseEntity<String> handleException(Exception e) {
@@ -66,18 +61,9 @@ public class DonneeFonciereRestController {
                                                     defaultValue = "0")
                                       Double rayon) {
     // Envoie de message vers la JMS pour la génération du PDF
-    pdfRequestProducer.sendPdfRequest(new PdfGenerationRequest(longitude,
-                                                               latitude,
-                                                               rayon));
-
-    // Attente de la génération du pdf
-    try {
-      pdfRequestCosumer.getPdfGenerationFuture().get();
-    } catch (InterruptedException | ExecutionException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-
-    return pdfRequestCosumer.getResponse();
+    
+    return donneeFonciereService.getResponseWithResource(latitude,
+                                                         longitude,
+                                                         rayon);
   }
 }

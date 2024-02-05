@@ -1,13 +1,12 @@
 package fr.esgi.dvf.service.impl;
 
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.Paragraph;
 import fr.esgi.dvf.business.DonneeFonciere;
 import fr.esgi.dvf.repository.DonneeFonciereRepository;
 import fr.esgi.dvf.service.DonneeFonciereService;
 import fr.esgi.dvf.service.IPdfService;
+import fr.esgi.dvf.service.jms.PdfRequestCosumer;
+import fr.esgi.dvf.service.jms.PdfRequestProducer;
 import java.net.MalformedURLException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
@@ -29,6 +28,12 @@ public class DonneeFonciereServiceImpl implements
 
   @Autowired
   private IPdfService pdfService;
+
+  @Autowired
+  private PdfRequestProducer pdfRequestProducer;
+
+  @Autowired
+  private PdfRequestCosumer pdfRequestCosumer;
 
   private DonneeFonciereRepository repository;
   private static final double EARTH_RADIUS = 6371000.0; // Earth radius in meters
@@ -64,6 +69,8 @@ public class DonneeFonciereServiceImpl implements
                                                                    longitude,
                                                                    radius);
 
+    Resource resource = null;
+
     if (donnees.isEmpty()) {
       LOGGER.atInfo()
             .log("Aucune données disponiple pour latitude : {}, longitude : {}, radius : {}",
@@ -74,21 +81,13 @@ public class DonneeFonciereServiceImpl implements
       return ResponseEntity.noContent().build();
     }
 
-    Document doc = this.pdfService.pdfDocumentProvider();
+    pdfRequestProducer.sendPdfRequest(donnees);
 
-    LOGGER.atInfo().log("{} elements pour : {}, longitude : {}, radius : {}",
-                        donnees.size(),
-                        latitude,
-                        longitude,
-                        radius);
-
-    this.pdfService.writeDataToPDF(donnees);
-    doc.add(new Paragraph("Pdf a été generé : " + LocalDateTime.now().toString()));
-
-    Resource resource;
+    pdfRequestCosumer.getPdfGenerationFuture().join();
 
     try {
-      resource = pdfService.resourceProducer();
+      String fileName = pdfRequestCosumer.getFileName();
+      resource = pdfService.resourceProducer(fileName);
     } catch (MalformedURLException e) {
       LOGGER.atError().log("Fichier {} n'est pas introuvable !",
                            e.getLocalizedMessage());

@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "DonneeFonciere")
@@ -17,85 +18,88 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 @Builder(toBuilder = true)
-public class DonneeFonciere {
+public class DonneeFonciere implements
+                            Serializable {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+  private static final long serialVersionUID = -3151542965392735620L;
 
-    @Column(name = "valeur_fonciere")
-    @CsvBindByPosition(position = 4)
-    private String valeurFonciere;
+  @Id
+  @GeneratedValue
+  private Long id;
 
-    @Column(name = "adresse_numero")
-    @CsvBindByPosition(position = 5)
-    private String adresseNumero;
+  @Column(name = "valeur_fonciere")
+  @CsvBindByPosition(position = 4)
+  private String valeurFonciere;
 
-    @Column(name = "adresse_nom_voie")
-    @CsvBindByPosition(position = 7)
-    private String adresseNomVoie;
+  @Column(name = "adresse_numero")
+  @CsvBindByPosition(position = 5)
+  private String adresseNumero;
 
-    @Column(name = "code_postal")
-    @CsvBindByPosition(position = 9)
-    private String codePostal;
+  @Column(name = "adresse_nom_voie")
+  @CsvBindByPosition(position = 7)
+  private String adresseNomVoie;
 
-    @Column(name = "nom_commune")
-    @CsvBindByPosition(position = 11)
-    private String nomCommune;
+  @Column(name = "code_postal")
+  @CsvBindByPosition(position = 9)
+  private String codePostal;
 
-    @Column(name = "code_departement")
-    @CsvBindByPosition(position = 12)
-    private String codeDepartement;
+  @Column(name = "nom_commune")
+  @CsvBindByPosition(position = 11)
+  private String nomCommune;
 
-    @Column(name = "nature_mutation")
-    @CsvBindByPosition(position = 3)
-    private String natureMutation;
+  @Column(name = "code_departement")
+  @CsvBindByPosition(position = 12)
+  private String codeDepartement;
 
-    @Column(name = "type_local")
-    @CsvBindByPosition(position = 30)
-    private String typeLocal;
+  @Column(name = "nature_mutation")
+  @CsvBindByPosition(position = 3)
+  private String natureMutation;
 
-    @Column(name = "surface_terrain")
-    @CsvBindByPosition(position = 37)
-    private String surfaceTerrain;
+  @Column(name = "type_local")
+  @CsvBindByPosition(position = 30)
+  private String typeLocal;
 
-    @Column(name = "longitude")
-    @CsvBindByPosition(position = 38)
-    private Double longitude;
+  @Column(name = "surface_terrain")
+  @CsvBindByPosition(position = 37)
+  private String surfaceTerrain;
 
-    @Column(name = "latitude")
-    @CsvBindByPosition(position = 39)
-    private Double latitude;
+  @Column(name = "longitude")
+  @CsvBindByPosition(position = 38)
+  private Double longitude;
 
-    public void setLongitude(String longitude) {
-        this.longitude = Double.parseDouble(longitude);
-    }
+  @Column(name = "latitude")
+  @CsvBindByPosition(position = 39)
+  private Double latitude;
 
-    public void setLatitude(String latitude) {
-        this.latitude = Double.parseDouble(latitude);
-    }
+  public void setLongitude(String longitude) {
+    this.longitude = Double.parseDouble(longitude);
+  }
 
-    public void setValeurFonciere(String valeurFonciere) {
-        this.valeurFonciere = valeurFonciere;
-    }
+  public void setLatitude(String latitude) {
+    this.latitude = Double.parseDouble(latitude);
+  }
 
-    public void setAdresseNomVoie(String adresseNomVoie) {
-        this.adresseNomVoie = adresseNomVoie;
-    }
+  public void setValeurFonciere(String valeurFonciere) {
+    this.valeurFonciere = valeurFonciere;
+  }
 
-    public void setCodePostal(String codePostal) {
-        this.codePostal = codePostal;
-    }
+  public void setAdresseNomVoie(String adresseNomVoie) {
+    this.adresseNomVoie = adresseNomVoie;
+  }
 
-    public void setNomCommune(String nomCommune) {
-        this.nomCommune = nomCommune;
-    }
+  public void setCodePostal(String codePostal) {
+    this.codePostal = codePostal;
+  }
 
-    public void setNatureMutation(String natureMutation) {
-        this.natureMutation = natureMutation;
-    }
+  public void setNomCommune(String nomCommune) {
+    this.nomCommune = nomCommune;
+  }
 
-    public void setTypeLocal(String typeLocal) {
-        this.typeLocal = typeLocal;
-    }
+  public void setNatureMutation(String natureMutation) {
+    this.natureMutation = natureMutation;
+  }
+
+  public void setTypeLocal(String typeLocal) {
+    this.typeLocal = typeLocal;
+  }
 }
