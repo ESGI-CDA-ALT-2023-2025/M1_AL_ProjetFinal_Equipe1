@@ -3,16 +3,13 @@ package fr.esgi.dvf.service.impl;
 import fr.esgi.dvf.business.DonneeFonciere;
 import fr.esgi.dvf.repository.DonneeFonciereRepository;
 import fr.esgi.dvf.service.DonneeFonciereService;
-import fr.esgi.dvf.service.IPdfService;
 import fr.esgi.dvf.service.PdfService;
 import fr.esgi.dvf.service.jms.PdfRequestCosumer;
 import fr.esgi.dvf.service.jms.PdfRequestProducer;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 
