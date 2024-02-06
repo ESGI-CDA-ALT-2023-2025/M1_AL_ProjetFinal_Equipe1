@@ -1,14 +1,14 @@
 package fr.esgi.dvf.config;
 
-import jakarta.jms.Queue;
 import org.apache.activemq.artemis.jms.client.ActiveMQQueue;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import jakarta.jms.Queue;
 
 @Configuration
 public class JmsConfig {
   
-  private final static String PDF_DOWNLOAD_QUEUE = "pdf-download-queue";
+  private static final String PDF_DOWNLOAD_QUEUE = "pdf-generator-queue";
 
   @Bean
   public Queue pdfDownloadQueue() {

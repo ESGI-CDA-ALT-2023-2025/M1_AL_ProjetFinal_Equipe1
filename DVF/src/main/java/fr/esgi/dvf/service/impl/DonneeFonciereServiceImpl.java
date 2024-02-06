@@ -1,11 +1,5 @@
 package fr.esgi.dvf.service.impl;
 
-import fr.esgi.dvf.business.DonneeFonciere;
-import fr.esgi.dvf.repository.DonneeFonciereRepository;
-import fr.esgi.dvf.service.DonneeFonciereService;
-import fr.esgi.dvf.service.IPdfService;
-import fr.esgi.dvf.service.jms.PdfRequestCosumer;
-import fr.esgi.dvf.service.jms.PdfRequestProducer;
 import java.net.MalformedURLException;
 import java.util.List;
 import java.util.UUID;
@@ -16,7 +10,14 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
+import fr.esgi.dvf.business.DonneeFonciere;
+import fr.esgi.dvf.repository.DonneeFonciereRepository;
+import fr.esgi.dvf.service.DonneeFonciereService;
+import fr.esgi.dvf.service.IPdfService;
+import fr.esgi.dvf.service.jms.PdfRequestCosumer;
+import fr.esgi.dvf.service.jms.PdfRequestProducer;
 
 @Service
 public class DonneeFonciereServiceImpl implements
@@ -34,6 +35,9 @@ public class DonneeFonciereServiceImpl implements
 
   @Autowired
   private PdfRequestCosumer pdfRequestCosumer;
+  
+  @Autowired
+  private JmsTemplate jmsTemplate;
 
   private DonneeFonciereRepository repository;
   private static final double EARTH_RADIUS = 6371000.0; // Earth radius in meters
@@ -83,10 +87,10 @@ public class DonneeFonciereServiceImpl implements
 
     pdfRequestProducer.sendPdfRequest(donnees);
 
-    pdfRequestCosumer.getPdfGenerationFuture().join();
+//    pdfRequestCosumer.getPdfGenerationFuture().join();
 
     try {
-      String fileName = pdfRequestCosumer.getFileName();
+      String fileName = (String) jmsTemplate.receiveAndConvert("pdf-response-queue");
       resource = pdfService.resourceProducer(fileName);
     } catch (MalformedURLException e) {
       LOGGER.atError().log("Fichier {} n'est pas introuvable !",
