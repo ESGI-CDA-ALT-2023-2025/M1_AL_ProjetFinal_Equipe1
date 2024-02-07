@@ -12,10 +12,8 @@ import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.util.ErrorHandler;
 import fr.esgi.dvf.init.DataFonciersDownloadService;
 import fr.esgi.dvf.service.CsvReaderService;
-import jakarta.annotation.PostConstruct;
 import jakarta.jms.ConnectionFactory;
 
 @SpringBootApplication
@@ -34,12 +32,12 @@ public class DvfApplication {
         SpringApplication.run(DvfApplication.class, args);
     }
 
-     @PostConstruct
-     public void init() {
-     dataFonciersDownloadService.downloadAndSaveFile();
-    
-     dataFonciersDownloadService.unzip();
-     }
+//    @PostConstruct
+//    public void init() {
+//        dataFonciersDownloadService.downloadAndSaveFile();
+//
+//        dataFonciersDownloadService.unzip();
+//    }
 
     @Scheduled(fixedRate = 300000)
     public void scheduleSaveToDatabase() {
@@ -53,19 +51,9 @@ public class DvfApplication {
 
         DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
 
-        ErrorHandler errorHandler = new ErrorHandler() {
-            @Override
-            public void handleError(Throwable t) {
-                LOGGER.atError().log("An error has occurred in the transaction {}",
-                                     t.getLocalizedMessage());
-            }
-        };
-
-        // anonymous class
-        factory.setErrorHandler(errorHandler);
-
         // lambda function
-        factory.setErrorHandler(t -> LOGGER.atError().log("An error has occurred in the transaction {}"));
+        factory.setErrorHandler(t -> LOGGER.atError()
+                                           .log("An error has occurred in the transaction {}"));
 
         configurer.configure(factory, connectionFactory);
 
