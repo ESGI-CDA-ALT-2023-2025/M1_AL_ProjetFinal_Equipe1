@@ -2,11 +2,11 @@ package fr.esgi.dvf.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.AfterAll;
@@ -17,12 +17,10 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.core.io.Resource;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.Paragraph;
 import fr.esgi.dvf.business.DonneeFonciere;
+import fr.esgi.dvf.controller.exception.TechniqueException;
 
 @TestInstance(Lifecycle.PER_CLASS)
 class PdfServiceImplTest {
@@ -72,15 +70,18 @@ class PdfServiceImplTest {
         donnees.add(f1);
         donnees.add(f2);
 
-        Document doc = pdfService.pdfDocumentProvider();
+        try {
+            pdfService.generateCompletePdf("TEST_FILE", donnees);
+        } catch (TechniqueException e) {
+            // TODO Auto-generated catch block
+            fail("TechniqueException");
+        }
 
         // Act
-        pdfService.writeDataToPDF(donnees);
-        doc.add(new Paragraph(LocalDateTime.now().toString()));
-        Resource res = pdfService.resourceProducer();
+        byte[] fileEnByte = pdfService.resourceProducer("TEST_FILE");
 
         // Assert
-        assertNotNull(res);
+        assertNotNull(fileEnByte);
         // List all files in the directory
         try (var stream = Files.list(Paths.get(PDF_DIRECTORY_PATH))) {
             // Check if the stream is not empty (i.e., at least one file exists)
