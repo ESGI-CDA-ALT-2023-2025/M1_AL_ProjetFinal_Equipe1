@@ -1,106 +1,104 @@
 package fr.esgi.dvf.service.impl;
 
-import java.net.MalformedURLException;
-import java.time.LocalDateTime;
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jms.annotation.JmsListener;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.Paragraph;
 import fr.esgi.dvf.business.DonneeFonciere;
 import fr.esgi.dvf.repository.DonneeFonciereRepository;
 import fr.esgi.dvf.service.DonneeFonciereService;
-import fr.esgi.dvf.service.IPdfService;
+import fr.esgi.dvf.service.PdfService;
+import fr.esgi.dvf.service.jms.PdfRequestProducer;
 
 @Service
 public class DonneeFonciereServiceImpl implements
                                        DonneeFonciereService<DonneeFonciere> {
 
     private static final Logger LOGGER = LogManager.getLogger(DonneeFonciereServiceImpl.class);
-    private static final String FILE_PREFIX_FOR_CONTENT_DISPOSITION = "attachment; filename=donneeFonciere_";
+    private static final String FILE_PREFIX_FOR_CONTENT_DISPOSITION =
+            "attachment; filename=donneeFonciere_";
 
     @Autowired
-    private IPdfService pdfService;
+    private PdfService pdfService;
+
+    @Autowired
+    private PdfRequestProducer pdfRequestProducer;
+
+    @Autowired
+    private JmsTemplate jmsTemplate;
 
     private DonneeFonciereRepository repository;
     private static final double EARTH_RADIUS = 6371000.0; // Earth radius in meters
+    private static final String PDF_RESPONSE_QUEUE = "pdf-response-queue";
 
     public DonneeFonciereServiceImpl(DonneeFonciereRepository repository) {
         this.repository = repository;
     }
 
-    @Override
-    public List<DonneeFonciere> getDonneesFonciereByRadius(final double latitude,
-                                                           final double longitude,
-                                                           final double radius) {
+    protected List<DonneeFonciere> getDonneesFonciereByRadius(final double latitude,
+                                                              final double longitude,
+                                                              final double radius) {
         final double radiusEnDegres = radius / EARTH_RADIUS;
 
         final double minLatitude = latitude - Math.toDegrees(radiusEnDegres);
         final double maxLatitude = latitude + Math.toDegrees(radiusEnDegres);
-        final double formuleLongitude = Math.toDegrees(radiusEnDegres) / Math.cos(Math.toRadians(latitude));
+        final double formuleLongitude =
+                Math.toDegrees(radiusEnDegres) / Math.cos(Math.toRadians(latitude));
         final double minLongitude = longitude - formuleLongitude;
         final double maxLongitude = longitude + formuleLongitude;
 
-        return repository.findByLatitudeBetweenAndLongitudeBetween(minLatitude, maxLatitude, minLongitude,
+        return repository.findByLatitudeBetweenAndLongitudeBetween(minLatitude, maxLatitude,
+                                                                   minLongitude,
                                                                    maxLongitude);
     }
 
     @Override
-    @JmsListener(destination = "pdf-download-queue")
-    public ResponseEntity<Resource> getResponseWithResource(final double latitude,
-                                                            final double longitude,
-                                                            final double radius) {
-        List<DonneeFonciere> donnees = this.getDonneesFonciereByRadius(latitude, longitude, radius);
+    public ResponseEntity<byte[]> getResponseWithResource(final double latitude,
+                                                          final double longitude,
+                                                          final double radius) {
 
-        Document doc = this.pdfService.pdfDocumentProvider();
+        List<DonneeFonciere> donnees = this.getDonneesFonciereByRadius(latitude,
+                                                                       longitude,
+                                                                       radius);
 
         if (donnees.isEmpty()) {
-            LOGGER.atInfo().log("Aucune données disponiple pour latitude : {}, longitude : {}, radius : {}",
-                                latitude,
-                                longitude,
-                                radius);
-            // Gérer le cas où n'as pas de données
+            LOGGER.atInfo()
+                  .log("NO CONTENT : Aucune données disponiple pour latitude : {}, longitude : {}, radius : {}",
+                       latitude,
+                       longitude,
+                       radius);
             return ResponseEntity.noContent().build();
         }
 
-        this.pdfService.writeDataToPDF(donnees);
-        doc.add(new Paragraph("Pdf a été generé : " + LocalDateTime.now().toString()));
+        pdfRequestProducer.sendPdfRequest(donnees);
+        String fileName = (String) this.jmsTemplate.receiveAndConvert(PDF_RESPONSE_QUEUE);
 
-        Resource resource;
+        byte[] fileEnByte = null;
 
         try {
-            resource = pdfService.resourceProducer();
-        } catch (MalformedURLException e) {
-            LOGGER.atError().log("Fichier {} n'est pas introuvable !",
-                                 e.getLocalizedMessage());
-            // Gérer le cas où le chemin n'existe pas
-            return ResponseEntity.notFound().build();
+            fileEnByte = this.pdfService.resourceProducer(fileName);
+        } catch (IOException e) {
+            LOGGER.atInfo().log("SERVICE_UNAVAILABLE : Le fichier {} n'existe pas !",
+                                fileName);
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).build();
         }
 
-        if (!resource.exists()) {
-            LOGGER.atInfo().log("Fichier {} n'existe pas !",
-                                resource.getFilename());
-            // Gérer le cas où le fichier n'existe pas
-            return ResponseEntity.noContent().build();
-        }
-
-        // Définir les en-têtes de réponse
         final String CONTENT_DISPOSITION_VALUES =
                 FILE_PREFIX_FOR_CONTENT_DISPOSITION + UUID.randomUUID().toString() + ".pdf";
-        HttpHeaders headers = new HttpHeaders();
+        final HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_DISPOSITION, CONTENT_DISPOSITION_VALUES);
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE);
 
         return ResponseEntity.ok()
                              .headers(headers)
-                             .body(resource);
+                             .body(fileEnByte);
     }
 }
