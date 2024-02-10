@@ -1,5 +1,6 @@
 # Application Spring Boot - DVF
 Il s'agit d'une application Spring Boot pour la gestion des valeurs foncières, utilisant Spring Data JPA pour la persistance des données, Spring Web pour les API RESTful. L'application comprend des fonctionnalités de traitement de fichiers, de génération de PDF et d'intégration avec un courtier de messages ActiveMQ intégré.
+Elle comprend également une interface Swagger afin de visualiser les routes disponibles ainsi que leur fonctionnement.
 
 ## Prérequis
 
