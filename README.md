@@ -82,7 +82,11 @@ iText PDF
 Commons IO
 
 
+<<<<<<< HEAD
 ### Configuration
+=======
+Node.js: 18.18 (18.13 minimum requis)
+>>>>>>> frontend-main
 
 L'application utilise Spring Boot Starter Parent version 3.2.0 *(compatible **jakarta** et pas **javax**)*
 
