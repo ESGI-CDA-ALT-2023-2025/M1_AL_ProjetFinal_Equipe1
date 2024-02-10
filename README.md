@@ -1,5 +1,8 @@
 # Application DVF
-Il s'agit d'une application monolithique Spring Boot + Angular conçue pour la récupération des valeurs foncières au format PDF. La branche [`backend`](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/tree/backend "backend") abrite le code source lié à la logique métier côté serveur, implémentée avec Spring Boot. D'autre part, la branche [`frontend-main`](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/tree/frontend-main "frontend-main") contient le code source relatif à l'interface utilisateur et à la logique côté client, développée avec Angular.  Par ailleurs, la branche [`conception_uml`](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/tree/conception_uml "conception_uml") contient le code source relatif à la conception UML de l'application, offrant une représentation visuelle des modèles et des relations entre les composants.
+Il s'agit d'une application basée sur une architecture monolithique utilisant les technologies Spring Boot et Angular conçue pour la récupération des valeurs foncières d'une zone donnée au format PDF. 
+La branche [`backend`](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/tree/backend "backend") abrite le code source lié à la logique métier côté serveur, implémentée avec Spring Boot. 
+La branche [`frontend-main`](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/tree/frontend-main "frontend-main") contient le code source relatif à l'interface utilisateur et à la logique côté client, développée avec Angular.  
+Enfin, la branche [`conception_uml`](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/tree/conception_uml "conception_uml") contient le code source relatif à la conception UML de l'application, offrant une représentation visuelle des modèles et des relations entre les composants.
 
 ## Prérequis
 
@@ -14,7 +17,7 @@ Il s'agit d'une application monolithique Spring Boot + Angular conçue pour la r
 ***Avec ZIP : ***
 
 Actuellement plus récente : [RELEASE_0.1.1](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/releases/tag/RELEASE_0.0.1 "RELEASE_0.1.1")
-*Historique de release* : [Tags releases](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/tags] "tags releases")
+*Historique de release* : [Tags releases](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/tags "tags releases")
 
 ***Avec Git*** :
 
@@ -52,7 +55,7 @@ mvn clean test -Pintegration-tests
 mvn spring-boot:run
 ```
 
-L'application sera accessible à l'adresse [http://localhost:8080/](http://localhost:8080/ "http://localhost:8080/") avec formulaire de recherche.
+L'application sera accessible à l'adresse [http://localhost:8080/](http://localhost:8080/ "http://localhost:8080/") depuis l'application cliente.
 
 ## Documentation Swagger
 
