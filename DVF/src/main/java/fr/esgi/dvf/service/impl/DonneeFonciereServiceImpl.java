@@ -20,19 +20,19 @@ import fr.esgi.dvf.service.jms.PdfRequestProducer;
 
 @Service
 public class DonneeFonciereServiceImpl implements
-                                       DonneeFonciereService<DonneeFonciere> {
+                                       DonneeFonciereService {
 
     private static final Logger LOGGER = LogManager.getLogger(DonneeFonciereServiceImpl.class);
     private static final String FILE_PREFIX_FOR_CONTENT_DISPOSITION =
             "attachment; filename=donneeFonciere_";
 
-    @Autowired
+    @Autowired // NOSONAR
     private PdfService pdfService;
 
-    @Autowired
+    @Autowired // NOSONAR
     private PdfRequestProducer pdfRequestProducer;
 
-    @Autowired
+    @Autowired // NOSONAR
     private JmsTemplate jmsTemplate;
 
     private DonneeFonciereRepository repository;

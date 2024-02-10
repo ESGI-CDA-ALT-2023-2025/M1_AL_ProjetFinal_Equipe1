@@ -20,7 +20,7 @@ public class CsvReaderService {
 
     private static final Logger LOGGER = LogManager.getLogger(CsvReaderService.class);
 
-    @Autowired
+    @Autowired // NOSONAR
     private DonneeFonciereRepository repository;
     private int linesToSkip = 0;
     private static final int LINES_TO_READ = 100000;
