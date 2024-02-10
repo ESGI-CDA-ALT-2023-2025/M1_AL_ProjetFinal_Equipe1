@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import fr.esgi.dvf.business.DonneeFonciere;
 import fr.esgi.dvf.controller.exception.TechniqueException;
 import fr.esgi.dvf.service.DonneeFonciereService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,7 +25,7 @@ import lombok.extern.log4j.Log4j2;
 public class DonneeFonciereRestController {
 
     @Autowired
-    private DonneeFonciereService<DonneeFonciere> donneeFonciereService;
+    private DonneeFonciereService donneeFonciereService;
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception e) {

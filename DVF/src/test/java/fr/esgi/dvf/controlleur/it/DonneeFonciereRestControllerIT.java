@@ -186,6 +186,7 @@ class DonneeFonciereRestControllerIT {
         // Attendre jusqu'à ce que le fichier soit présent
         while (!Files.exists(Path.of("src/main/resources/full.csv"))) {
             try {
+                // NOSONAR
                 Thread.sleep(1000); // Attendre 1 seconde avant de vérifier à nouveau
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -195,6 +196,7 @@ class DonneeFonciereRestControllerIT {
 
         // Attendre 40 seconds pour sauvegarder en base des 100 000 lignes
         try {
+            // NOSONAR
             Thread.sleep(40000);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

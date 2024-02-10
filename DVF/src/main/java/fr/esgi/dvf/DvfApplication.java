@@ -46,10 +46,10 @@ public class DvfApplication {
         csvReaderService.saveToDatabase();
     }
 
+    @SuppressWarnings("rawtypes")
     @Bean
-    public JmsListenerContainerFactory<?> myFactory(ConnectionFactory connectionFactory,
-                                                    DefaultJmsListenerContainerFactoryConfigurer configurer) {
-
+    public JmsListenerContainerFactory myFactory(ConnectionFactory connectionFactory,
+                                                 DefaultJmsListenerContainerFactoryConfigurer configurer) {
         DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
 
         // lambda function
