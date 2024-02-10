@@ -1,30 +1,77 @@
-<div style="display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;">
-  <form (ngSubmit)="onSubmit()" #formulaireForm="ngForm">
-
-    <mat-form-field appearance="outline">
+<div
+  style="
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  "
+>
+  <form (ngSubmit)="onSubmit()" #formulaireForm="ngForm" style="width: 50%">
+    <mat-form-field appearance="outline" style="width: 100%">
       <mat-label>Latitude</mat-label>
-      <input matInput type="number" placeholder="Latitude" name="latitude" [(ngModel)]="latitude" required>
+      <input
+        matInput
+        type="number"
+        placeholder="Latitude"
+        name="latitude"
+        [(ngModel)]="latitude"
+        required
+      />
     </mat-form-field>
 
-    <br>
+    <br />
 
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" style="width: 100%">
       <mat-label>Longitude</mat-label>
-      <input matInput type="number" placeholder="Longitude" name="longitude" [(ngModel)]="longitude" required>
+      <input
+        matInput
+        type="number"
+        placeholder="Longitude"
+        name="longitude"
+        [(ngModel)]="longitude"
+        required
+      />
     </mat-form-field>
 
-    <br>
+    <br />
 
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" style="width: 100%">
       <mat-label>Rayon (en mètre)</mat-label>
-      <input matInput type="number" placeholder="Rayon" name="rayon" [(ngModel)]="rayon" required>
+      <input
+        matInput
+        type="number"
+        placeholder="Rayon"
+        name="rayon"
+        [(ngModel)]="rayon"
+        required
+      />
     </mat-form-field>
 
-    <br>
+    <br />
 
-    <button mat-raised-button color="primary" type="submit" [disabled]="!formulaireForm.form.valid">Soumettre</button>
+    <!-- Message d'erreur -->
+    <div
+      *ngIf="messageError"
+      style="color: red; text-align: center; width: 100%; white-space: normal"
+    >
+      {{ messageError }}
+    </div>
+    <br />
+
+    <div style="display: flex; justify-content: center">
+      <button
+        *ngIf="!isLoad; else loadingSpinner"
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="!formulaireForm.form.valid"
+      >
+        Soumettre
+      </button>
+
+      <ng-template #loadingSpinner>
+        <mat-spinner diameter="50" color="accent"></mat-spinner>
+      </ng-template>
+    </div>
   </form>
 </div>

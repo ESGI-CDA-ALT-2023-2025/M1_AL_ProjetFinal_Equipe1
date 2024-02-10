@@ -1,58 +1,68 @@
-import { Component } from '@angular/core';
-import {MatInputModule} from "@angular/material/input";
-import {FormsModule} from "@angular/forms";
-import {MatButtonModule} from "@angular/material/button";
-import {ApiService} from "../service/api.service";
-import {HttpErrorResponse} from "@angular/common/http";
-import {formatDate} from "@angular/common";
+import { Component, NgModule } from '@angular/core';
+import { ApiService } from '../service/api.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-formulaire',
-  standalone: true,
-  imports: [
-    MatInputModule,
-    FormsModule,
-    MatButtonModule
-  ],
   templateUrl: './formulaire.component.html',
-  styleUrl: './formulaire.component.scss'
+  styleUrl: './formulaire.component.scss',
 })
 export class FormulaireComponent {
-
   longitude!: number;
   latitude!: number;
   rayon!: number;
 
-  constructor(private _apiService: ApiService) {
-  }
+  messageError?: string;
+  isLoad: boolean = false;
+
+  constructor(private _apiService: ApiService) {}
 
   onSubmit(): void {
-    console.log(
-      "longitude: ", this.longitude,
-      "\nlatitude: ", this.latitude,
-      "\nrayon: ", this.rayon
-    )
+    this.messageError = undefined;
+    this.isLoad = true;
 
-    this._apiService.getInfo(this.longitude, this.latitude, this.rayon).subscribe({
-      next: (result: Blob): void => {
-        this.afficherPdf(result);
-      },
-      error: (error: HttpErrorResponse): void => {
-        alert(error.message);
-      }
-    });
+    console.log(
+      'longitude: ',
+      this.longitude,
+      '\nlatitude: ',
+      this.latitude,
+      '\nrayon: ',
+      this.rayon
+    );
+
+    this._apiService
+      .getInfo(this.longitude, this.latitude, this.rayon)
+      .subscribe({
+        next: (result: Blob | null): void => {
+          this.isLoad = false;
+
+          if (result !== null) {
+            this.afficherPdf(result);
+          } else {
+            console.log('No content received (204)');
+            this.messageError = 'Aucune données disponible';
+          }
+        },
+        error: (error: HttpErrorResponse): void => {
+          this.isLoad = false;
+
+          console.log('ERROR !');
+          this.messageError = error.message;
+        },
+      })
   }
 
   afficherPdf(pdfBlobObject: Blob): void {
-
-    let newBlob: Blob = new Blob([pdfBlobObject], { type: "application/pdf" });
+    let newBlob: Blob = new Blob([pdfBlobObject], { type: 'application/pdf' });
 
     const data: string = window.URL.createObjectURL(newBlob);
 
     let link = document.createElement('a');
     link.href = data;
     link.download = this._genererTitreFichier();
-    link.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}));
+    link.dispatchEvent(
+      new MouseEvent('click', { bubbles: true, cancelable: true, view: window })
+    );
   }
 
   private _genererTitreFichier(): string {
@@ -66,5 +76,4 @@ export class FormulaireComponent {
 
     return `DonneesFoncieres_${annee}-${mois}-${jour}_${heures}${minutes}`;
   }
-
 }
