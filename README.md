@@ -16,7 +16,7 @@ Enfin, la branche [`conception_uml`](https://github.com/ChineDmitri/M1_AL_Projet
 
 ***Avec ZIP : ***
 
-Actuellement plus récente : [RELEASE_0.1.1](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/releases/tag/RELEASE_0.0.1 "RELEASE_0.1.1")
+Actuellement plus récente : [RELEASE_0.1.1](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/releases/tag/RELEASE_0.1.1 "RELEASE_0.1.1")
 *Historique de release* : [Tags releases](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/tags "tags releases")
 
 ***Avec Git*** :
