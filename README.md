@@ -4,6 +4,8 @@ La branche [`backend`](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/
 La branche [`frontend-main`](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/tree/frontend-main "frontend-main") contient le code source relatif à l'interface utilisateur et à la logique côté client, développée avec Angular.  
 Enfin, la branche [`conception_uml`](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/tree/conception_uml "conception_uml") contient le code source relatif à la conception UML de l'application, offrant une représentation visuelle des modèles et des relations entre les composants.
 
+![Main page](https://github.com/ChineDmitri/M1_AL_ProjetFinal_Equipe1/blob/main/appli.jpg)
+
 ## Prérequis
 
 [`Java 17`](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html "`Java 17`")
