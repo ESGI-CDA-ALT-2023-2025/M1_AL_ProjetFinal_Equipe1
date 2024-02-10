@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import fr.esgi.dvf.init.DataFonciersDownloadService;
 import fr.esgi.dvf.service.CsvReaderService;
+import jakarta.annotation.PostConstruct;
 import jakarta.jms.ConnectionFactory;
 
 @SpringBootApplication
@@ -32,12 +33,12 @@ public class DvfApplication {
         SpringApplication.run(DvfApplication.class, args);
     }
 
-//    @PostConstruct
-//    public void init() {
-//        dataFonciersDownloadService.downloadAndSaveFile();
-//
-//        dataFonciersDownloadService.unzip();
-//    }
+    @PostConstruct
+    public void init() {
+        dataFonciersDownloadService.downloadAndSaveFile();
+
+        dataFonciersDownloadService.unzip();
+    }
 
     @Scheduled(fixedRate = 300000)
     public void scheduleSaveToDatabase() {
