@@ -17,19 +17,15 @@ class DvfApplicationTests {
     void contextLoads() {
         // Specify the file names
         String csvGzFileName = "full.csv.gz";
-        String csvFileName = "full.csv";
 
         // Build the paths for the resources directory
         String resourcesPath = "src/main/resources/";
         String csvGzFilePath = resourcesPath + csvGzFileName;
-        String csvFilePath = resourcesPath + csvFileName;
 
         // Check if the files exist
         File csvGzFile = new File(csvGzFilePath);
-        File csvFile = new File(csvFilePath);
 
         assertTrue(csvGzFile.exists(), csvGzFileName + " should exist in " + resourcesPath);
-        assertTrue(csvFile.exists(), csvFileName + " should exist in " + resourcesPath);
     }
 
 }

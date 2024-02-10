@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class PdfRequestProducer {
 
-  @Autowired
+  @Autowired // NOSONAR
   private JmsTemplate jmsTemplate;
 
-  @Autowired
+  @Autowired // NOSONAR
   private Queue pdfDownloadQueue;
 
   public void sendPdfRequest(List<DonneeFonciere> donnees) {

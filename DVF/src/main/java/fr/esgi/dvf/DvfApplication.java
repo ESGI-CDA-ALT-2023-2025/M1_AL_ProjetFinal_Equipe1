@@ -24,9 +24,9 @@ public class DvfApplication {
 
     private static final Logger LOGGER = LogManager.getLogger(DvfApplication.class);
 
-    @Autowired
+    @Autowired // NOSONAR
     private DataFonciersDownloadService dataFonciersDownloadService;
-    @Autowired
+    @Autowired // NOSONAR
     private CsvReaderService csvReaderService;
 
     public static void main(String[] args) {

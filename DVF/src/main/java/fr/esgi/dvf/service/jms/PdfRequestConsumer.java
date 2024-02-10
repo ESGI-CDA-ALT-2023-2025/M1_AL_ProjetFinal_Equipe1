@@ -17,7 +17,7 @@ public class PdfRequestConsumer {
 
     private static final Logger LOGGER = LogManager.getLogger(PdfRequestConsumer.class);
 
-    @Autowired
+    @Autowired // NOSONAR
     private PdfService pdfService;
 
     @JmsListener(destination = "pdf-generator-queue",

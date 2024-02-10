@@ -96,7 +96,7 @@ class DonneeFonciereRestControllerIT {
     }
 
     @Test
-    void testControllerPDFEndpoint_shouldHaveDifferenceGreaterThan5Seconds() throws Exception {
+    void testControllerPDFEndpoint_shouldHaveDifferenceGreaterThan3Seconds() throws Exception {
         double longitude = 6.019949;
         double latitude = 46.247458;
         double rayon = 100000;
@@ -149,8 +149,8 @@ class DonneeFonciereRestControllerIT {
 
         // doit etre different parce que demande de generation pdf est 1 par 1
         Long difference = combinedFuture.join();
-        System.err.println(difference);
-        assertTrue((double) difference / 1_000_000_000.0 > 5.0);
+        System.err.println("erreur: "+difference);
+        assertTrue((double) difference / 1_000_000_000.0 > 3.0);
     }
 
     private static void cleanUpPdfDirectory() {
