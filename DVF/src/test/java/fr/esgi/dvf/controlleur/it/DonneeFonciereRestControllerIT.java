@@ -63,7 +63,6 @@ class DonneeFonciereRestControllerIT {
                                                       .param("latitude", String.valueOf(latitude))
                                                       .param("rayon", String.valueOf(rayon))
                                                       .contentType(MediaType.APPLICATION_JSON))
-                       .andDo(MockMvcResultHandlers.print())
                        .andExpect(MockMvcResultMatchers.status().is5xxServerError());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -109,7 +108,6 @@ class DonneeFonciereRestControllerIT {
                                                       .param("latitude", String.valueOf(latitude))
                                                       .param("rayon", String.valueOf(rayon))
                                                       .contentType(MediaType.APPLICATION_JSON))
-                       .andDo(MockMvcResultHandlers.print())
                        .andExpect(MockMvcResultMatchers.status().isOk())
                        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_PDF));
             } catch (Exception e) {
@@ -127,7 +125,6 @@ class DonneeFonciereRestControllerIT {
                                                       .param("latitude", String.valueOf(latitude))
                                                       .param("rayon", String.valueOf(rayon))
                                                       .contentType(MediaType.APPLICATION_JSON))
-                       .andDo(MockMvcResultHandlers.print())
                        .andExpect(MockMvcResultMatchers.status().isOk())
                        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_PDF));
             } catch (Exception e) {
@@ -149,7 +146,7 @@ class DonneeFonciereRestControllerIT {
 
         // doit etre different parce que demande de generation pdf est 1 par 1
         Long difference = combinedFuture.join();
-        System.err.println("erreur: "+difference);
+        System.err.println("erreur: " + difference);
         assertTrue((double) difference / 1_000_000_000.0 > 3.0);
     }
 
