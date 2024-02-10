@@ -1,8 +1,8 @@
 # Readme pour le Front-end DVF
-Ce projet Angular, nommé "dvf-client", nécessite Node.js version 18.18 ou supérieure. Assurez-vous d'avoir installé la version appropriée de Node.js avant de continuer.
+Ce projet Angular, nommé "dvf-client", nécessite Node.js version 18.13 ou supérieure. Assurez-vous d'avoir installé la version appropriée de Node.js avant de continuer.
 
 ## Prérequis
-Node.js (version 18.18 ou supérieure)
+Node.js (version 18.13 ou supérieure)
 Angular CLI (installé en global)
 ```bash
 npm install -g @angular/cli@17.0.7
@@ -57,7 +57,7 @@ npm test
 
 Angular: 17.0.0
 
-Node.js: 18.18 (minimum requis)
+Node.js: 18.18 (18.13 minimum requis)
 
 npm: Version compatible avec la version de Node.js installée.
 
